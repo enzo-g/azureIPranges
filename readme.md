@@ -5,7 +5,7 @@ The original JSON file is downloaded from: https://www.microsoft.com/en-us/downl
 
 ## Last update
 
-This repository contains the IPs from "ServiceTags_Public_20230529.json"
+This repository contains the IPs from "ServiceTags_Public_20230605.json"
 
 ## Description
 
