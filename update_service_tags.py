@@ -111,8 +111,9 @@ def process_json(json_path):
 
     version = str(data.get("changeNumber", "Unknown Version"))
     version_date = data.get("version", "Unknown Date")
+    change_number = data.get("changeNumber", "Unknown ChangeNumber")
     logging.info(f"Extracted {len(systems)} systems from the JSON file.")
-    return len(systems), version, version_date
+    return len(systems), version, version_date, change_number
 
 def generate_directory_index(directory, output_file):
     """Generate an index.html file for the specified directory."""
@@ -145,7 +146,7 @@ def generate_directory_index(directory, output_file):
         logging.error(f"Failed to generate index.html for {directory}: {str(e)}")
         raise
 
-def update_index_page(json_url, version, version_date, json_filename):
+def update_index_page(json_url, version, version_date, json_filename, change_number):
     """Update the index.html page using the template."""
     if not os.path.exists(TEMPLATE_FILE):
         raise Exception(f"Template file {TEMPLATE_FILE} not found.")
@@ -153,13 +154,16 @@ def update_index_page(json_url, version, version_date, json_filename):
     with open(TEMPLATE_FILE, "r") as template_file:
         template_content = template_file.read()
 
+    # Replace placeholders in the template with dynamic data
     updated_content = template_content.replace("{{JSON_URL}}", json_url)
     updated_content = updated_content.replace("{{LATEST_STATIC_JSON}}", f"json-history/{json_filename}")
     updated_content = updated_content.replace("{{JSON_HISTORY_PATH}}", "json-history/")
     updated_content = updated_content.replace("{{VERSION}}", version)
     updated_content = updated_content.replace("{{GENERATED_TIME}}", datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
     updated_content = updated_content.replace("{{GENERATED_BY}}", "GitHub Automation")
+    updated_content = updated_content.replace("{{CHANGE_NUMBER}}", str(change_number))
 
+    # Write the updated content to the temporary index file
     with open(TEMP_INDEX_FILE, "w") as index_file:
         index_file.write(updated_content)
 
@@ -214,11 +218,12 @@ def main():
         logging.info(f"Downloaded: {json_filename}")
 
         logging.info("Processing JSON...")
-        total_systems, version, version_date = process_json(json_path)
-        logging.info(f"Processed {total_systems} systems.")
+        total_systems, version, version_date, change_number = process_json(json_path)
+        logging.info(f"Processed {total_systems} systems with change number {change_number}.")
 
         logging.info("Updating index page...")
-        update_index_page(json_url, version, version_date, json_filename)
+        update_index_page(json_url, version, version_date, json_filename, change_number)
+
 
         logging.info("Finalizing output...")
         finalize_output(json_path, json_filename)
