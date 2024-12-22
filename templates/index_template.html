@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Service Tags Repository</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #2c3e50;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        .resources-section, .script-section, .important-note {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .resources-section, .important-note {
+            background-color: #f8f9fa;
+        }
+        .script-section {
+            background-color: #e6e6e6;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .disclaimer {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .social-links {
+            margin-top: 20px;
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Azure Service Tags Repository</h1>
+        
+        <div class="resources-section">
+            <h2>Service Tags and Resources</h2>
+            <h3>Source JSON Files</h3>
+            <p><strong>Microsoft Azure IP Ranges and Service Tags:</strong> <a href="{{JSON_URL}}">Download Original JSON</a></p>
+            <p><strong>Static JSON File:</strong> <a href="json-history/ServiceTags_Public.json">ServiceTags_Public.json</a></p>
+            <p><strong>Latest Version Copy:</strong> <a href="{{LATEST_STATIC_JSON}}">{{LATEST_STATIC_JSON}}</a></p>
+            <p><strong>Historical JSON Files:</strong> <a href="{{JSON_HISTORY_PATH}}">View JSON History</a></p>
+
+            <h3>Palo Alto Networks Ready Files</h3>
+            <p>Formatted TXT files for Palo Alto Networks firewalls are available:</p>
+            <p><strong>Directory:</strong> <a href="ranges-services-pa/">ranges-services-pa/</a></p>
+            <p>Each file is organized by service name (e.g., <code>AzureBackup.txt</code>, <code>AzureActiveDirectory.txt</code>). Simply download the file for the Azure service you need and import it into your PA firewall configuration.</p>
+        </div>
+
+        <div class="important-note">
+            <h2>Automation-Friendly Design</h2>
+            <p>This page was created to simplify the integration of Microsoft Azure IP ranges into Palo Alto Networks firewalls. Since the JSON file provided by Microsoft was not directly compatible, this project automates the generation of TXT files specifically formatted for PA firewalls.</p>
+            <p>Additionally, this project provides a static link to download the latest JSON file without having to parse Microsoft’s website, saving time and improving automation workflows.</p>
+        </div>
+
+        <div class="script-section">
+            <h2>Azure IP Ranges Script <i class="fa-solid fa-code-fork"></i></h2>
+            <p>This page was automatically generated using a Python script available at <a href="https://github.com/enzo-g/azureIPranges" target="_blank">GitHub Repository</a>, and updated regularly through GitHub Actions.</p>
+            <p>We recommend forking this script if you plan to automate your infrastructure with it. Forking ensures you maintain control of updates, can customize it for your environment, and enhance security by avoiding dependencies on this repository.</p>
+            <h3>Features</h3>
+            <ul>
+                <li>Fetches the latest Azure IP ranges JSON file from Microsoft</li>
+                <li>Processes and organizes IP ranges by service</li>
+                <li>Generates individual TXT files for each service compatible with PA firewalls</li>
+                <li>Provides a static JSON link for the latest Azure IP ranges</li>
+                <li>Maintains a history of JSON files for reference</li>
+            </ul>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Note:</strong> Microsoft updates these IP ranges weekly. Always verify the ranges against your requirements before implementation. Some service tags might not be available in all clouds and regions.
+        </div>
+
+        <div class="social-links">
+            <h2>Contact</h2>
+            <a href="https://www.linkedin.com/in/enzogautier/" target="_blank">
+                Connect with me on LinkedIn
+            </a><br />
+			<a href="https://github.com/enzo-g/azureIPranges/" target="_blank">
+				Reach me on GitHub
+			</a>		
+        </div>
+
+		<div class="footer">
+			<p>Generated on {{GENERATED_TIME}} by {{GENERATED_BY}}</p>
+			<p>This page, its contents, and the associated repository are provided "AS IS" without warranty of any kind. Please refer to the README in the repository for the full disclaimer.</p>
+		</div>
+
+    </div>
+</body>
+</html>

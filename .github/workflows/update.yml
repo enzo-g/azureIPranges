@@ -1,0 +1,57 @@
+name: Update Azure Service Tags
+
+on:
+  # Trigger on scheduled events
+  schedule:
+    - cron: "0 11 * * 3" # Run every Wednesday at 11:00 UTC
+
+  # Trigger on manual dispatch
+  workflow_dispatch:
+
+  # Trigger on pushes to the main branch affecting specific files
+  push:
+    paths:
+      - update_service_tags.py
+      - requirements.txt
+      - .github/workflows/update.yml
+      - templates/index_template.html
+
+permissions:
+  contents: write  # Required to commit changes
+
+jobs:
+  update-service-tags:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13.1
+
+      # Step 3: Install dependencies
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Run the Python script
+      - name: Run Update Script
+        run: |
+          python update_service_tags.py
+
+      # Step 5: Commit and push updates
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git commit -m "chore: update service tags (automated)"
+          git push origin HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
