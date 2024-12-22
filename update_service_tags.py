@@ -114,6 +114,37 @@ def process_json(json_path):
     logging.info(f"Extracted {len(systems)} systems from the JSON file.")
     return len(systems), version, version_date
 
+def generate_directory_index(directory, output_file):
+    """Generate an index.html file for the specified directory."""
+    try:
+        files = os.listdir(directory)
+        links = [
+            f'<li><a href="{file}">{file}</a></li>' for file in sorted(files) if not file.startswith('.')
+        ]
+        html_content = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Directory Index</title>
+        </head>
+        <body>
+            <h1>Directory Index</h1>
+            <p>Click on a file to download:</p>
+            <ul>
+                {''.join(links)}
+            </ul>
+        </body>
+        </html>
+        """
+        with open(output_file, "w") as f:
+            f.write(html_content)
+        logging.info(f"Generated index.html for {directory}.")
+    except Exception as e:
+        logging.error(f"Failed to generate index.html for {directory}: {str(e)}")
+        raise
+
 def update_index_page(json_url, version, version_date, json_filename):
     """Update the index.html page using the template."""
     if not os.path.exists(TEMPLATE_FILE):
@@ -153,6 +184,10 @@ def finalize_output(json_path, json_filename):
     if os.path.exists(TEMP_INDEX_FILE):
         shutil.copy2(TEMP_INDEX_FILE, INDEX_FILE)
         logging.info(f"Copied index.html to: {INDEX_FILE}")
+
+    # Generate index.html for JSON history and ranges-services-pa
+    generate_directory_index(JSON_DIR, os.path.join(JSON_DIR, "index.html"))
+    generate_directory_index(OUTPUT_DIR, os.path.join(OUTPUT_DIR, "index.html"))
 
     logging.info("Final output successfully moved to docs/")
 
