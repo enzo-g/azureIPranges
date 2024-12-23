@@ -120,7 +120,9 @@ def generate_directory_index(directory, output_file):
     try:
         files = os.listdir(directory)
         links = [
-            f'<li><a href="{file}">{file}</a></li>' for file in sorted(files) if not file.startswith('.')
+            f'<li><a href="{file}">{file}</a></li>'
+            for file in sorted(files)
+            if not file.startswith('.') and file != os.path.basename(output_file)
         ]
         html_content = f"""
         <!DOCTYPE html>
