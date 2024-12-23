@@ -120,7 +120,9 @@ def generate_directory_index(directory, output_file):
     try:
         files = os.listdir(directory)
         links = [
-            f'<li><a href="{file}">{file}</a></li>' for file in sorted(files) if not file.startswith('.')
+            f'<li><a href="{file}">{file}</a></li>'
+            for file in sorted(files)
+            if not file.startswith('.') and file != os.path.basename(output_file)
         ]
         html_content = f"""
         <!DOCTYPE html>
@@ -146,7 +148,7 @@ def generate_directory_index(directory, output_file):
         logging.error(f"Failed to generate index.html for {directory}: {str(e)}")
         raise
 
-def update_index_page(json_url, version, version_date, json_filename, change_number):
+def update_index_page(version, version_date, json_filename, change_number):
     """Update the index.html page using the template."""
     if not os.path.exists(TEMPLATE_FILE):
         raise Exception(f"Template file {TEMPLATE_FILE} not found.")
@@ -155,8 +157,7 @@ def update_index_page(json_url, version, version_date, json_filename, change_num
         template_content = template_file.read()
 
     # Replace placeholders in the template with dynamic data
-    updated_content = template_content.replace("{{JSON_URL}}", json_url)
-    updated_content = updated_content.replace("{{LATEST_STATIC_JSON}}", f"json-history/{json_filename}")
+    updated_content = template_content.replace("{{LATEST_STATIC_JSON}}", f"json-history/{json_filename}")
     updated_content = updated_content.replace("{{JSON_HISTORY_PATH}}", "json-history/")
     updated_content = updated_content.replace("{{VERSION}}", version)
     updated_content = updated_content.replace("{{GENERATED_TIME}}", datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
@@ -222,8 +223,7 @@ def main():
         logging.info(f"Processed {total_systems} systems with change number {change_number}.")
 
         logging.info("Updating index page...")
-        update_index_page(json_url, version, version_date, json_filename, change_number)
-
+        update_index_page(version, version_date, json_filename, change_number)
 
         logging.info("Finalizing output...")
         finalize_output(json_path, json_filename)
